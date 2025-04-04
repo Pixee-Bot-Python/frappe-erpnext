@@ -6,12 +6,12 @@ import json
 import traceback
 
 import frappe
-import requests
 from frappe import _
 from frappe.model.document import Document
 from requests_oauthlib import OAuth2Session
 
 from erpnext import encode_company_abbr
+from security import safe_requests
 
 
 # QuickBooks requires a redirect URL, User will be redirect to this URL
@@ -1371,7 +1371,7 @@ class QuickBooksMigrator(Document):
 			"Accept": "application/json",
 			"Authorization": f"Bearer {self.access_token}",
 		}
-		response = requests.get(*args, **kwargs)
+		response = safe_requests.get(*args, **kwargs)
 		# HTTP Status code 401 here means that the access_token is expired
 		# We can refresh tokens and retry
 		# However limitless recursion does look dangerous
